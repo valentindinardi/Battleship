@@ -17,6 +17,20 @@ h2 {
     font-family: sans-serif;
 }
 
+
+
+h4 {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 40px;
+    letter-spacing: 1.6px;
+    word-spacing: 2.8px;
+    color: #DFF6FF;
+    font-weight: 700;
+    text-decoration: none solid rgb(68, 68, 68);
+    font-style: normal;
+    font-variant: small-caps;
+}
+
 .parent {
     display: grid;
     grid-gap: 5px;

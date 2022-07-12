@@ -6,6 +6,41 @@
   "grids": [
    [
     null,
+    "X",
+    null,
+    null,
+    "O",
+    null,
+    null,
+    "X",
+    null
+   ],
+   [
+    null,
+    "X",
+    null,
+    null,
+    "X",
+    null,
+    null,
+    "X",
+    null
+   ]
+  ],
+  "ships": [
+   1,
+   0
+  ],
+  "playerCounter": 2,
+  "currentTurn": 1
+ },
+ {
+  "id": 1,
+  "playerWon": -1,
+  "matchClosed": false,
+  "grids": [
+   [
+    null,
     "O",
     null,
     null,
@@ -32,41 +67,6 @@
    0
   ],
   "playerCounter": 2,
-  "currentTurn": 0
- },
- {
-  "id": 1,
-  "playerWon": -1,
-  "matchClosed": false,
-  "grids": [
-   [
-    null,
-    "X",
-    null,
-    null,
-    "X",
-    null,
-    null,
-    "O",
-    null
-   ],
-   [
-    null,
-    "X",
-    null,
-    null,
-    "X",
-    null,
-    null,
-    "X",
-    null
-   ]
-  ],
-  "ships": [
-   1,
-   0
-  ],
-  "playerCounter": 2,
   "currentTurn": 1
  },
  {
@@ -76,32 +76,67 @@
   "grids": [
    [
     null,
-    "X",
     null,
     null,
-    "X",
+    "O",
+    "O",
     null,
     null,
-    "X",
-    null
+    null,
+    "X"
    ],
    [
-    null,
+    "X",
+    "X",
     "X",
     null,
     null,
-    "X",
     null,
     null,
-    "X",
+    null,
     null
    ]
   ],
   "ships": [
-   0,
+   2,
    0
   ],
   "playerCounter": 2,
   "currentTurn": 1
+ },
+ {
+  "id": 3,
+  "playerWon": -1,
+  "matchClosed": false,
+  "grids": [
+   [
+    "O",
+    "O",
+    "O",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  ],
+  "ships": [
+   3,
+   3
+  ],
+  "playerCounter": 1,
+  "currentTurn": 0
  }
 ]

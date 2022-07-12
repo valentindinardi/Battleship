@@ -31,6 +31,24 @@
         font-family: sans-serif;
     }
 
+    h3 {
+        color: white;
+    }
+
+    h4 {
+        font-family: sans-serif;
+        font-size: 40px;
+        letter-spacing: 1.6px;
+        word-spacing: 2.8px;
+        color: #DFF6FF;
+        font-weight: 700;
+        text-decoration: none solid rgb(68, 68, 68);
+        font-style: normal;
+        font-variant: small-caps;
+        display: flex;
+        justify-content: center;
+    }
+
     .parent {
         display: grid;
         grid-gap: 5px;
@@ -51,14 +69,6 @@
         font-weight: bold;
     }
 
-    /* parent>div:nth-child(odd) {
-    background-color: red;
-}
-
-parent>div:nth-child(even) {
-    background-color: #47B5FF;
-} */
-
     .gridContainer {
         display: flex;
         flex-direction: row;
@@ -70,7 +80,9 @@ parent>div:nth-child(even) {
 
     <h1>Battleship Game! </h1>
     <div class="roomId"></div>
+    <h4 class="winner"></h4>
     <div class="gridContainer">
+
         <h2>Your Grid</h2>
         <div id="your-grid" class="parent"></div>
 
@@ -109,6 +121,40 @@ parent>div:nth-child(even) {
 
             })
 
+        setInterval(function () {
+
+            $.get('/check-status', {
+                id: window.localStorage.getItem('idroom'),
+                player: window.localStorage.getItem('idplayer')
+            },
+                function (data) {
+                    console.log(data.message)
+                    if (data.matchClosed) {
+                        $('.gridContainer').detach()
+                        $('.winner').text(`Juego Finalizado. El ganador es el jugador numero: ${data.winner} :)`);
+
+                    }
+                    else if (!data.matchClosed) {
+                        $.post('/game-data', {
+                            id: window.localStorage.getItem('idroom'),
+                            player: window.localStorage.getItem('idplayer')
+                        },
+                            function (data) {
+                                console.log(data.grid)
+                                console.log('actualizando grid!')
+                                let grid = data.grid
+                                $('#your-grid div').detach();
+                                for (let index = 0; index < grid.length; index++) {
+                                    const element = grid[index];
+                                    $('#your-grid').append(`<div data - position="${index}" > ${(element) ? element : ''}</div >`) //Prepend o append? //Si existe 0 en el grid del JSON entonces lo coloco, sino pongo nada
+                                }
+
+                            })
+                    }
+                }
+            )
+        }, 1000);
+
     }
 
     $('#enemy-grid div').click(function () {                            //Le pongo la funcion de click al grid enemigo
@@ -127,7 +173,7 @@ parent>div:nth-child(even) {
                 }
                 else if (data.drown == 0) {
                     console.log(data.drown)                     //Esto no funciona
-                    $(this).css("background-color", "red");        //.fadeOut()
+                    $(this).remove();        //.fadeOut()
                 }
 
             })
