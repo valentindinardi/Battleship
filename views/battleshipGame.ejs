@@ -69,6 +69,7 @@ parent>div:nth-child(even) {
 <body>
 
     <h1>Battleship Game! </h1>
+    <div class="roomId"></div>
     <div class="gridContainer">
         <h2>Your Grid</h2>
         <div id="your-grid" class="parent"></div>
@@ -88,9 +89,14 @@ parent>div:nth-child(even) {
     </div>
 </body>
 <script>
-    window.onload = function () {                                //Cuando se carga la escena del juego
+
+
+    window.onload = function () {
+
+        $('.roomId').append(`<h3>Numero de sala: ${window.localStorage.getItem('idroom')} </h3 > `)
+
         $.post('/game-data', {                                  //Le paso la data al post game-data para recibir lo qe necesito   
-            id: window.localStorage.getItem('idroom'),
+            id: window.localStorage.getItem('idroom'),      //Estaria bueno mostrar id de partida en front!!!
             player: window.localStorage.getItem('idplayer')
         },
             function (data) {
@@ -98,9 +104,11 @@ parent>div:nth-child(even) {
                 let grid = data.grid
                 for (let index = 0; index < grid.length; index++) {     //Comienzo a llenar el grid
                     const element = grid[index];
-                    $('#your-grid').append(`<div data-position="${index}">${(element) ? element : ''}</div>`) //Prepend o append? //Si existe 0 en el grid del JSON entonces lo coloco, sino pongo nada
+                    $('#your-grid').append(`<div data - position="${index}" > ${(element) ? element : ''}</div >`) //Prepend o append? //Si existe 0 en el grid del JSON entonces lo coloco, sino pongo nada
                 }
+
             })
+
     }
 
     $('#enemy-grid div').click(function () {                            //Le pongo la funcion de click al grid enemigo
@@ -121,7 +129,25 @@ parent>div:nth-child(even) {
                     console.log(data.drown)                     //Esto no funciona
                     $(this).css("background-color", "red");        //.fadeOut()
                 }
+
             })
+        setTimeout(function () {
+            $.get('/check-status', {
+                id: window.localStorage.getItem('idroom'),
+                player: window.localStorage.getItem('idplayer')
+            },
+                function (data) {
+                    console.log(data.message)
+                    if (data.matchClosed) {
+                        $('.gridContainer').append(`<h3>El ganador es el jugador numero: ${data.winner} </h3 > `);
+                        $('.gridContainer').text(`El ganador es el jugador numero: ${data.winner}`)
+                    }
+
+
+
+                }
+            )
+        })
     })
 
 </script>

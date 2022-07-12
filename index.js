@@ -105,7 +105,7 @@ app.post('/choose-placement', (req, res) => {
   readFile();
   const { id, player, num } = req.body
   placeCharacter(num, 'O', roomData[id].grids[player])
-  roomData[id].ships[player]++;
+  //roomData[id].ships[player]++;                            Capaz esto no es necesario.
   writeFile();
   readFile();                               //Keep it updated
   res.status(200).json({
@@ -116,45 +116,97 @@ app.post('/choose-placement', (req, res) => {
 
 app.post('/attack', (req, res) => {
   readFile();
-
-
-  let hit = false
   const { id, player, num } = req.body
 
-  if (roomData[id].currentTurn != player)       //not finished
+  if (roomData[id].playerCounter != 2) {
     return res.status(400).json({
       error: true,
-      message: 'No es tu turno'
+      message: 'Falta un jugador'
     });
-
-
-  const enemy = (player == 0) ? 1 : 0              //Me fijo que player es 
-
-  if (roomData[id].grids[enemy][num] == 'O') {                // Si tiene un 0 en el grid enemigo es pq le pego
-    roomData[id].grids[enemy][num] = "X"                     // X = barco tirado
-    roomData[id].ships[enemy]--;                            //Decremento ships del enemigo
-    console.log('El jugador ' + player + ' le ha pegado en cuadrado numero' + num)
-    hit = true                                              //Para saber si le pego en el res.status
   }
+  else {
 
-  roomData[id].currentTurn = (roomData[id].currentTurn == 0) ? 1 : 0        //cambio de turno!
+    let hit = false
 
-  writeFile();
-  readFile();
 
-  res.status(200).json({
-    error: false,
-    message: (hit) ? 'Barco hundido!' : 'No habia nada',
-    drown: (hit) ? 1 : 0
-  });
+    if (roomData[id].currentTurn != player)       //not finished
+      return res.status(400).json({
+        error: true,
+        message: 'No es tu turno'
+      });
 
+
+    const enemy = (player == 0) ? 1 : 0              //Me fijo que player es 
+
+    if (roomData[id].grids[enemy][num] == 'O') {                // Si tiene un 0 en el grid enemigo es pq le pego
+      roomData[id].grids[enemy][num] = "X"                     // X = barco tirado
+      roomData[id].ships[enemy]--;                            //Decremento ships del enemigo
+      console.log('El jugador ' + player + ' le ha pegado en cuadrado numero' + num)
+      hit = true                                              //Para saber si le pego en el res.status
+    }
+
+    roomData[id].currentTurn = (roomData[id].currentTurn == 0) ? 1 : 0        //cambio de turno!
+
+    writeFile();
+    readFile();
+
+    // res.redirect(request.get('referer'))  //TESTINGGGG
+
+    res.status(200).json({
+      error: false,
+      message: (hit) ? 'Barco hundido!' : 'No habia nada',
+      drown: (hit) ? 1 : 0
+    });
+  }
 })
 
-app.get('/check-status/:id/:player', (req, res) => {    //Falta checkear esto 
-  readFile();
-  const { id, player } = req.params
-  let winner
+// app.get('/check-status/:id/:player', (req, res) => {    //Falta checkear esto 
+//   readFile();
+//   const { id, player } = req.params
+//   let winner
 
+//   if (roomData[id].playerCounter != 2) {
+//     return res.status(400).json({
+//       error: true,
+//       message: 'Falta un jugador'
+//     });
+//   }
+
+//   if (roomData[id].ships[0] == 0 || roomData[id].ships[1] == 0) {
+//     // se acabo el juego
+//     if (roomData[id].ships[0] == 0) {
+//       winner = 1
+//     } else {
+//       winner = 0
+//     }
+
+//     res.status(200).json({
+//       error: false,
+//       matchClosed: true,
+//       winner: winner,
+//       message: 'Juego finalizado'
+//     });
+//   } else {
+//     if (roomData[id].currentTurn != player)
+//       res.status(200).json({
+//         error: false,
+//         matchClosed: false,
+//         message: 'pending'
+//       });
+//     else
+//       res.status(200).json({
+//         error: false,
+//         matchClosed: false,
+//         message: 'your turn'
+//       });
+//   }
+// })
+
+app.get('/check-status', (req, res) => {    //Falta checkear esto 
+  readFile();
+  const { id, player } = req.query    // o req query?
+  let winner
+  console.log('toy funcionando')
   if (roomData[id].playerCounter != 2) {
     return res.status(400).json({
       error: true,
@@ -163,7 +215,7 @@ app.get('/check-status/:id/:player', (req, res) => {    //Falta checkear esto
   }
 
   if (roomData[id].ships[0] == 0 || roomData[id].ships[1] == 0) {
-    // se acabo el juego
+    console.log('game over')
     if (roomData[id].ships[0] == 0) {
       winner = 1
     } else {
