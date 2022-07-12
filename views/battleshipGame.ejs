@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleship</title>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"
+        type='text/css'>
+    <link rel="stylesheet" href="battleshipGame.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<style>
+    body {
+        margin: 30px;
+        background-color: #06283D;
+    }
+
+    h1 {
+        font-size: 60px;
+        width: 500px;
+        margin: 0 auto;
+        margin-bottom: 120px;
+        color: #DFF6FF;
+        font-family: sans-serif;
+    }
+
+    h2 {
+        color: #DFF6FF;
+        font-family: sans-serif;
+    }
+
+    .parent {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: 200px 200px 200px;
+        grid-template-rows: 200px 200px 200px;
+    }
+
+    .parent>div {
+        padding: 10px;
+        background-color: #47B5FF;
+        border-radius: 3px;
+
+        display: grid;
+        place-items: center;
+
+
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    /* parent>div:nth-child(odd) {
+    background-color: red;
+}
+
+parent>div:nth-child(even) {
+    background-color: #47B5FF;
+} */
+
+    .gridContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+</style>
+
+<body>
+
+    <h1>Battleship Game! </h1>
+    <div class="gridContainer">
+        <h2>Your Grid</h2>
+        <div id="your-grid" class="parent"></div>
+
+        <div id="enemy-grid" class="parent">
+            <div data-position="0"></div>
+            <div data-position="1"></div>
+            <div data-position="2"></div>
+            <div data-position="3"></div>
+            <div data-position="4"></div>
+            <div data-position="5"></div>
+            <div data-position="6"></div>
+            <div data-position="7"></div>
+            <div data-position="8"></div>
+            <h2>Enemy Grid</h2>
+        </div>
+    </div>
+</body>
+<script>
+    window.onload = function () {                                //Cuando se carga la escena del juego
+        $.post('/game-data', {                                  //Le paso la data al post game-data para recibir lo qe necesito   
+            id: window.localStorage.getItem('idroom'),
+            player: window.localStorage.getItem('idplayer')
+        },
+            function (data) {
+                console.log(data.grid)                                  //testingg
+                let grid = data.grid
+                for (let index = 0; index < grid.length; index++) {     //Comienzo a llenar el grid
+                    const element = grid[index];
+                    $('#your-grid').append(`<div data-position="${index}">${(element) ? element : ''}</div>`) //Prepend o append? //Si existe 0 en el grid del JSON entonces lo coloco, sino pongo nada
+                }
+            })
+    }
+
+    $('#enemy-grid div').click(function () {                            //Le pongo la funcion de click al grid enemigo
+
+        console.log($(this).attr('data-position'))                      //this = algun div
+        $.post('/attack', {                                            //Cuando ataco mando todo esto
+            id: window.localStorage.getItem('idroom'),
+            player: window.localStorage.getItem('idplayer'),
+            num: $(this).attr('data-position')                  // Get the value of an attribute  //testin
+        },
+            function (data) {                                   //callback!
+                alert(data.message);
+                if (data.drown == 1) {
+                    console.log(data.drown)
+                    $(this).text('X')                                //Esto funciona pero hay que refreshear
+                }
+                else if (data.drown == 0) {
+                    console.log(data.drown)                     //Esto no funciona
+                    $(this).css("background-color", "red");        //.fadeOut()
+                }
+            })
+    })
+
+</script>
+
+</html>

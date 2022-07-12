@@ -1,0 +1,72 @@
+[
+ {
+  "id": 0,
+  "playerWon": -1,
+  "matchClosed": false,
+  "grids": [
+   [
+    null,
+    "X",
+    null,
+    null,
+    "X",
+    null,
+    null,
+    "X",
+    null
+   ],
+   [
+    null,
+    null,
+    "X",
+    null,
+    null,
+    "O",
+    null,
+    null,
+    "O"
+   ]
+  ],
+  "ships": [
+   3,
+   5
+  ],
+  "playerCounter": 2,
+  "currentTurn": 0
+ },
+ {
+  "id": 1,
+  "playerWon": -1,
+  "matchClosed": false,
+  "grids": [
+   [
+    null,
+    "O",
+    null,
+    null,
+    "O",
+    null,
+    null,
+    "X",
+    null
+   ],
+   [
+    null,
+    "X",
+    null,
+    null,
+    "O",
+    null,
+    null,
+    "O",
+    null
+   ]
+  ],
+  "ships": [
+   5,
+   5
+  ],
+  "playerCounter": 2,
+  "currentTurn": 0
+ }
+]

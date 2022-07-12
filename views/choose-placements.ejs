@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Sala <%= idRoom %>
+    </title>
+</head>
+
+<body>
+    <h1>Choose your ships placements!</h1>
+    <div class="container">
+        <form id="form">
+            Elija en que posicion desea poner su barco
+            <input id="position" type="num" min="1" max="9">
+            <button id="checkButton">Check!
+            </button>
+        </form>
+        <div class="parent">
+            <div id="1">0</div>
+            <div id="2">1</div>
+            <div id="3">2</div>
+            <div id="4">3</div>
+            <div id="5">4</div>
+            <div id="6">5</div>
+            <div id="7">6</div>
+            <div id="8">7</div>
+            <div id="9">8</div>
+            <h2>Grid example</h2>
+        </div>
+    </div>
+</body>
+<script>
+    var barcoActual = 0
+
+    window.onload = function () {                                       // Cuando estoy en esta view, seteo la idroom y el idplayer
+        window.localStorage.setItem("idroom", '<%= idRoom %>')         // que la obtengo del POST create room.
+        window.localStorage.setItem("idplayer", '<%= idPlayer %>')
+    }
+
+    $('#form').submit(function (evt) {                              //Cada vez qe submiteo el form (apreto el button) sucede esto.
+        evt.preventDefault()                                        // Stop form from submitting normally
+
+        if (barcoActual < 3) {                                             //Hasta que no complete los barquitos sigo pudiendo agregarlos
+            $.post('/choose-placement', {                                 //Le paso la data al post choose-placements
+                id: window.localStorage.getItem('idroom'),
+                player: window.localStorage.getItem('idplayer'),
+                num: $("#position").val()
+            },
+                function (data) {                                   //A callback function that is executed if the request succeeds.
+                    barcoActual++
+                    alert(data.message)
+                    $('#position').val('')                      //reseteo el input.
+                    if (barcoActual == 3) {                      //Si termine vamos a /game   
+                        window.location = '/game'
+                    }
+                })
+        }
+    })
+
+
+</script>
+<style>
+    body {
+        background-color: #06283D;
+        font-family: sans-serif;
+        font-weight: bold;
+        color: #DFF6FF;
+    }
+
+    h1 {
+        font-size: 60px;
+        margin-bottom: 120px;
+        color: #DFF6FF;
+        font-family: sans-serif;
+    }
+
+    .container {
+        margin: 30px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .parent {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: 50px 50px 50px;
+        grid-template-rows: 50px 50px 50px;
+    }
+
+    .parent>div {
+        padding: 10px;
+        background-color: #47B5FF;
+        border-radius: 3px;
+
+        display: grid;
+        place-items: center;
+
+
+        font-size: 24px;
+        font-weight: bold;
+    }
+</style>
+
+</html>
